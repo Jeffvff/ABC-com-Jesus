@@ -1,0 +1,10 @@
+<svg width="260" height="72" viewBox="0 0 260 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="2" width="256" height="68" rx="30" fill="#FFFFFF"/>
+  <rect x="2" y="2" width="256" height="68" rx="30" stroke="#DCEBF5" stroke-width="2"/>
+  <rect x="10" y="10" width="52" height="52" rx="24" fill="#76BDE8"/>
+  <circle cx="50" cy="18" r="5" fill="#FFD76A"/>
+  <text x="36" y="44" text-anchor="middle" fill="#285A75" font-family="Trebuchet MS, Arial, sans-serif" font-size="26" font-weight="700">A</text>
+  <text x="74" y="34" fill="#25343B" font-family="Trebuchet MS, Arial, sans-serif" font-size="23" font-weight="800">ABC</text>
+  <text x="74" y="53" fill="#285A75" font-family="Trebuchet MS, Arial, sans-serif" font-size="14" font-weight="700">com Jesus</text>
+  <path d="M209 24C212.8 19.6 219.3 19.5 223.2 23.8C227.2 19.5 233.7 19.6 237.5 24C241.8 28.8 241.3 36.4 236.5 40.6L223.2 52L210 40.6C205.2 36.4 204.7 28.8 209 24Z" fill="#F6A58D"/>
+</svg>

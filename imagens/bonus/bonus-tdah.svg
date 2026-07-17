@@ -1,0 +1,13 @@
+<svg width="520" height="360" viewBox="0 0 520 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="520" height="360" rx="32" fill="#FFF9EE"/>
+  <rect x="24" y="24" width="472" height="312" rx="28" fill="#FFFFFF" stroke="#D7E9F5" stroke-width="4"/>
+  <circle cx="86" cy="82" r="26" fill="#76BDE8"/>
+  <path d="M84 70L88 84L102 88L88 92L84 106L80 92L66 88L80 84L84 70Z" fill="#FFFFFF"/>
+  <text x="136" y="88" fill="#285A75" font-family="Fredoka, Arial, sans-serif" font-size="28" font-weight="700">Bônus TDAH</text>
+  <text x="48" y="150" fill="#25343B" font-family="Nunito, Arial, sans-serif" font-size="20" font-weight="800">Atividades mais objetivas</text>
+  <text x="48" y="192" fill="#596970" font-family="Nunito, Arial, sans-serif" font-size="18">Organização visual, propostas curtas e ritmo</text>
+  <text x="48" y="220" fill="#596970" font-family="Nunito, Arial, sans-serif" font-size="18">mais fácil de repetir no dia a dia.</text>
+  <rect x="48" y="256" width="160" height="20" rx="10" fill="#FFD76A"/>
+  <rect x="48" y="288" width="220" height="20" rx="10" fill="#8FCFAD"/>
+  <rect x="48" y="320" width="184" height="12" rx="6" fill="#F6A58D"/>
+</svg>
