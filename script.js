@@ -379,8 +379,6 @@ function setupTestimonialsCarousel() {
   const track = testimonialsCarousel.querySelector("[data-testimonial-track]");
   const slides = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-slide]"));
   const dots = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-dot]"));
-  const prevButton = testimonialsCarousel.querySelector("[data-testimonial-prev]");
-  const nextButton = testimonialsCarousel.querySelector("[data-testimonial-next]");
 
   if (!viewport || !track || slides.length === 0) {
     return;
@@ -429,28 +427,6 @@ function setupTestimonialsCarousel() {
       goToSlide(activeIndex + 1);
     }, 5000);
   };
-
-  prevButton?.addEventListener("click", () => {
-    goToSlide(activeIndex - 1);
-    startAutoplay();
-  });
-
-  nextButton?.addEventListener("click", () => {
-    goToSlide(activeIndex + 1);
-    startAutoplay();
-  });
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      goToSlide(index);
-      startAutoplay();
-    });
-  });
-
-  testimonialsCarousel.addEventListener("mouseenter", stopAutoplay);
-  testimonialsCarousel.addEventListener("mouseleave", startAutoplay);
-  testimonialsCarousel.addEventListener("focusin", stopAutoplay);
-  testimonialsCarousel.addEventListener("focusout", startAutoplay);
 
   window.addEventListener("resize", renderSlide);
 
