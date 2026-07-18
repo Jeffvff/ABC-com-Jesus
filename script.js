@@ -112,6 +112,14 @@ function getUpsellCheckoutUrl() {
   return buildCheckoutUrl(CONFIG.checkoutUpsellUrl || CONFIG.checkoutCompletoUrl);
 }
 
+function navigateToCheckout(url) {
+  if (!url) {
+    return;
+  }
+
+  window.location.href = url;
+}
+
 function getScrollOffset() {
   const headerHeight = header?.offsetHeight ?? 0;
   return headerHeight + 18;
@@ -206,8 +214,6 @@ function openUpsellModal() {
   const upsellUrl = getUpsellCheckoutUrl();
   if (upsellAccept && upsellUrl) {
     upsellAccept.setAttribute("href", upsellUrl);
-    upsellAccept.setAttribute("target", "_blank");
-    upsellAccept.setAttribute("rel", "noopener noreferrer");
   }
 
   upsellModal.hidden = false;
@@ -229,6 +235,14 @@ function setupCtas() {
   ctaLinks.forEach((link) => {
     const plan = link.dataset.plan || "geral";
     const checkoutUrl = getCheckoutUrl(plan);
+
+    if (plan === "essencial" && upsellModal) {
+      link.setAttribute("href", "#ofertas");
+      link.removeAttribute("target");
+      link.removeAttribute("rel");
+      link.addEventListener("click", handleCtaClick);
+      return;
+    }
 
     if (checkoutUrl) {
       link.setAttribute("href", checkoutUrl);
@@ -284,20 +298,23 @@ function setupUpsellModal() {
     closeUpsellModal();
 
     if (pendingEssencialCheckoutUrl) {
-      window.open(pendingEssencialCheckoutUrl, "_blank", "noopener,noreferrer");
+      navigateToCheckout(pendingEssencialCheckoutUrl);
       return;
     }
 
     smoothScrollToElement(offersSection);
   });
 
-  upsellAccept?.addEventListener("click", () => {
+  upsellAccept?.addEventListener("click", (event) => {
+    event.preventDefault();
     trackMetaEvent("CliqueProdutoDesconto", {
       produto: "ABC com Jesus Completo",
       preco_promocional: CONFIG.precoUpsellCompleto,
       preco_original: CONFIG.precoOriginalCompleto
     });
+    const upsellUrl = getUpsellCheckoutUrl();
     closeUpsellModal();
+    navigateToCheckout(upsellUrl);
   });
 
   window.addEventListener("keydown", (event) => {
