@@ -389,6 +389,17 @@ function setupTestimonialsCarousel() {
 
   const getViewportWidth = () => viewport.clientWidth || 1;
 
+  const syncSlideSizes = () => {
+    const viewportWidth = getViewportWidth();
+
+    slides.forEach((slide) => {
+      slide.style.minWidth = `${viewportWidth}px`;
+      slide.style.width = `${viewportWidth}px`;
+    });
+
+    track.style.width = `${viewportWidth * slides.length}px`;
+  };
+
   const applyTranslate = (offsetPx = 0, withTransition = true) => {
     track.style.transition = withTransition ? "transform 0.45s ease" : "none";
     const baseOffset = -activeIndex * getViewportWidth();
@@ -396,6 +407,7 @@ function setupTestimonialsCarousel() {
   };
 
   const renderSlide = () => {
+    syncSlideSizes();
     applyTranslate();
 
     slides.forEach((slide, index) => {
@@ -427,6 +439,13 @@ function setupTestimonialsCarousel() {
       goToSlide(activeIndex + 1);
     }, 5000);
   };
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      goToSlide(index);
+      startAutoplay();
+    });
+  });
 
   window.addEventListener("resize", renderSlide);
 
@@ -538,3 +557,7 @@ function init() {
 // Inserir Analytics aqui após receber a configuração.
 
 document.addEventListener("DOMContentLoaded", init);
+
+document.addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
