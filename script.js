@@ -13,13 +13,10 @@ const CONFIG = {
   precoOriginalCompleto: "59,90",
   parcelasEssencial: "2x de R$ 5,25",
   parcelasCompleto: "6x de R$ 5,55",
-  offerDurationMinutes: 15,
-  offerTimerMode: "session",
   platformName: "Wiapy",
   guaranteeDays: 7
 };
 
-const OFFER_STORAGE_KEY = "abc-com-jesus-offer-start";
 const MOBILE_BAR_STORAGE_KEY = "abc-com-jesus-mobile-bar-closed";
 const MOBILE_BREAKPOINT = 640;
 
@@ -31,7 +28,6 @@ const internalLinks = Array.from(document.querySelectorAll('a[href^="#"]'));
 const mobileBar = document.querySelector("#mobile-bar");
 const mobileBarClose = document.querySelector("#mobile-bar-close");
 const offersSection = document.querySelector("#ofertas");
-const testimonialsCarousel = document.querySelector("[data-testimonials-carousel]");
 const upsellModal = document.querySelector("#upsell-modal");
 const upsellAccept = document.querySelector("#upsell-accept");
 const upsellDecline = document.querySelector("#upsell-decline");
@@ -50,33 +46,28 @@ function padNumber(value) {
   return String(value).padStart(2, "0");
 }
 
-function getOfferStart() {
-  if (CONFIG.offerTimerMode !== "session") {
-    return Date.now();
-  }
-
-  const stored = window.sessionStorage.getItem(OFFER_STORAGE_KEY);
-  if (stored) {
-    return Number(stored);
-  }
-
-  const now = Date.now();
-  window.sessionStorage.setItem(OFFER_STORAGE_KEY, String(now));
-  return now;
-}
-
 function updateTimer() {
-  const durationMs = CONFIG.offerDurationMinutes * 60 * 1000;
-  const start = getOfferStart();
-  const end = start + durationMs;
-  const remaining = Math.max(end - Date.now(), 0);
-  const minutes = Math.floor(remaining / 60000);
+  const now = new Date();
+  const endOfDay = new Date(now);
+  endOfDay.setHours(24, 0, 0, 0);
+
+  const remaining = Math.max(endOfDay.getTime() - now.getTime(), 0);
+  const hours = Math.floor(remaining / 3600000);
+  const minutes = Math.floor((remaining % 3600000) / 60000);
   const seconds = Math.floor((remaining % 60000) / 1000);
-  const text = `${padNumber(minutes)}:${padNumber(seconds)}`;
+  const text = `${padNumber(hours)}:${padNumber(minutes)}:${padNumber(seconds)}`;
 
   timerElements.forEach((element) => {
     element.textContent = text;
   });
+}
+
+function safeRun(label, fn) {
+  try {
+    fn();
+  } catch (error) {
+    console.error(`[${label}]`, error);
+  }
 }
 
 function buildCheckoutUrl(baseUrl) {
@@ -370,89 +361,6 @@ function setupAnimations() {
   candidates.forEach((element) => observer.observe(element));
 }
 
-function setupTestimonialsCarousel() {
-  if (!testimonialsCarousel) {
-    return;
-  }
-
-  const viewport = testimonialsCarousel.querySelector(".testimonials-carousel__viewport");
-  const track = testimonialsCarousel.querySelector("[data-testimonial-track]");
-  const slides = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-slide]"));
-  const dots = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-dot]"));
-
-  if (!viewport || !track || slides.length === 0) {
-    return;
-  }
-
-  let activeIndex = 0;
-  let autoplayId = null;
-
-  const getViewportWidth = () => viewport.clientWidth || 1;
-
-  const syncSlideSizes = () => {
-    const viewportWidth = getViewportWidth();
-
-    slides.forEach((slide) => {
-      slide.style.minWidth = `${viewportWidth}px`;
-      slide.style.width = `${viewportWidth}px`;
-    });
-
-    track.style.width = `${viewportWidth * slides.length}px`;
-  };
-
-  const applyTranslate = (offsetPx = 0, withTransition = true) => {
-    track.style.transition = withTransition ? "transform 0.45s ease" : "none";
-    const baseOffset = -activeIndex * getViewportWidth();
-    track.style.transform = `translate3d(${baseOffset + offsetPx}px, 0, 0)`;
-  };
-
-  const renderSlide = () => {
-    syncSlideSizes();
-    applyTranslate();
-
-    slides.forEach((slide, index) => {
-      slide.classList.toggle("is-active", index === activeIndex);
-    });
-
-    dots.forEach((dot, index) => {
-      const isActive = index === activeIndex;
-      dot.classList.toggle("is-active", isActive);
-      dot.setAttribute("aria-current", isActive ? "true" : "false");
-    });
-  };
-
-  const goToSlide = (index) => {
-    activeIndex = (index + slides.length) % slides.length;
-    renderSlide();
-  };
-
-  const stopAutoplay = () => {
-    if (autoplayId) {
-      window.clearInterval(autoplayId);
-      autoplayId = null;
-    }
-  };
-
-  const startAutoplay = () => {
-    stopAutoplay();
-    autoplayId = window.setInterval(() => {
-      goToSlide(activeIndex + 1);
-    }, 5000);
-  };
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      goToSlide(index);
-      startAutoplay();
-    });
-  });
-
-  window.addEventListener("resize", renderSlide);
-
-  renderSlide();
-  startAutoplay();
-}
-
 function setupConfigDrivenContent() {
   const mappings = [
     ["[data-price-essencial]", CONFIG.precoEssencial],
@@ -540,17 +448,16 @@ function setupMobileBar() {
 }
 
 function init() {
-  setupConfigDrivenContent();
-  setupUpsellModal();
-  setupCtas();
-  setupInternalLinks();
-  setupFaq();
-  setupHeader();
-  setupAnimations();
-  setupTestimonialsCarousel();
-  setupMobileBar();
   updateTimer();
   window.setInterval(updateTimer, 1000);
+  safeRun("setupConfigDrivenContent", setupConfigDrivenContent);
+  safeRun("setupUpsellModal", setupUpsellModal);
+  safeRun("setupCtas", setupCtas);
+  safeRun("setupInternalLinks", setupInternalLinks);
+  safeRun("setupFaq", setupFaq);
+  safeRun("setupHeader", setupHeader);
+  safeRun("setupAnimations", setupAnimations);
+  safeRun("setupMobileBar", setupMobileBar);
 }
 
 // Inserir Meta Pixel aqui após receber o ID.
