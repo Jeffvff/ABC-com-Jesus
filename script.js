@@ -11,8 +11,8 @@ const CONFIG = {
   precoUpsellCompleto: "17,90",
   precoOriginalEssencial: "29,90",
   precoOriginalCompleto: "59,90",
-  parcelasEssencial: "6x de R$ 1,65",
-  parcelasCompleto: "6x de R$ 4,65",
+  parcelasEssencial: "2x de R$ 5,25",
+  parcelasCompleto: "6x de R$ 5,55",
   offerDurationMinutes: 15,
   offerTimerMode: "session",
   platformName: "Wiapy",
@@ -375,27 +375,26 @@ function setupTestimonialsCarousel() {
     return;
   }
 
+  const viewport = testimonialsCarousel.querySelector(".testimonials-carousel__viewport");
   const track = testimonialsCarousel.querySelector("[data-testimonial-track]");
   const slides = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-slide]"));
   const dots = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-dot]"));
   const prevButton = testimonialsCarousel.querySelector("[data-testimonial-prev]");
   const nextButton = testimonialsCarousel.querySelector("[data-testimonial-next]");
 
-  if (!track || slides.length === 0) {
+  if (!viewport || !track || slides.length === 0) {
     return;
   }
 
   let activeIndex = 0;
   let autoplayId = null;
-  let touchStartX = 0;
-  let touchCurrentX = 0;
-  let isDragging = false;
 
-  const getViewportWidth = () => testimonialsCarousel.querySelector(".testimonials-carousel__viewport")?.clientWidth ?? 1;
+  const getViewportWidth = () => viewport.clientWidth || 1;
 
   const applyTranslate = (offsetPx = 0, withTransition = true) => {
     track.style.transition = withTransition ? "transform 0.45s ease" : "none";
-    track.style.transform = `translateX(calc(-${activeIndex * 100}% + ${offsetPx}px))`;
+    const baseOffset = -activeIndex * getViewportWidth();
+    track.style.transform = `translate3d(${baseOffset + offsetPx}px, 0, 0)`;
   };
 
   const renderSlide = () => {
@@ -452,51 +451,8 @@ function setupTestimonialsCarousel() {
   testimonialsCarousel.addEventListener("mouseleave", startAutoplay);
   testimonialsCarousel.addEventListener("focusin", stopAutoplay);
   testimonialsCarousel.addEventListener("focusout", startAutoplay);
-  testimonialsCarousel.addEventListener("touchstart", (event) => {
-    stopAutoplay();
-    touchStartX = event.changedTouches[0]?.clientX ?? 0;
-    touchCurrentX = touchStartX;
-    isDragging = true;
-    track.style.transition = "none";
-  }, { passive: true });
 
-  testimonialsCarousel.addEventListener("touchmove", (event) => {
-    if (!isDragging) {
-      return;
-    }
-
-    touchCurrentX = event.changedTouches[0]?.clientX ?? touchCurrentX;
-    const deltaX = touchCurrentX - touchStartX;
-    applyTranslate(deltaX, false);
-  }, { passive: true });
-
-  testimonialsCarousel.addEventListener("touchend", () => {
-    if (!isDragging) {
-      return;
-    }
-
-    isDragging = false;
-    const deltaX = touchCurrentX - touchStartX;
-    const threshold = getViewportWidth() * 0.14;
-
-    if (Math.abs(deltaX) > threshold) {
-      if (deltaX < 0) {
-        goToSlide(activeIndex + 1);
-      } else {
-        goToSlide(activeIndex - 1);
-      }
-    } else {
-      renderSlide();
-    }
-
-    startAutoplay();
-  }, { passive: true });
-
-  testimonialsCarousel.addEventListener("touchcancel", () => {
-    isDragging = false;
-    renderSlide();
-    startAutoplay();
-  }, { passive: true });
+  window.addEventListener("resize", renderSlide);
 
   renderSlide();
   startAutoplay();

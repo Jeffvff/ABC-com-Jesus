@@ -956,13 +956,13 @@ summary {
   overflow: hidden;
   max-width: 420px;
   margin: 0 auto;
+  touch-action: pan-y;
 }
 
 .testimonials-carousel__track {
   display: flex;
   transition: transform 0.45s ease;
   will-change: transform;
-  touch-action: pan-y;
 }
 
 .testimonial-card {
@@ -970,6 +970,7 @@ summary {
   max-width: 100%;
   margin: 0;
   padding: 10px;
+  user-select: none;
 }
 
 .testimonials-carousel__arrow {
@@ -1686,7 +1687,10 @@ summary {
   }
 
   .testimonials-carousel__arrow {
-    display: none;
+    display: inline-grid;
+    width: 44px;
+    height: 44px;
+    font-size: 1.15rem;
   }
 
   .testimonial-card {
