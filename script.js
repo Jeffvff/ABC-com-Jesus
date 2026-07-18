@@ -21,6 +21,8 @@ const MOBILE_BAR_STORAGE_KEY = "abc-com-jesus-mobile-bar-closed";
 const MOBILE_BREAKPOINT = 640;
 
 const header = document.querySelector("#site-header");
+const siteNav = document.querySelector("#site-nav");
+const menuToggle = document.querySelector("#menu-toggle");
 const timerElements = [document.querySelector("#offer-timer"), document.querySelector("#offer-timer-secondary")].filter(Boolean);
 const faqButtons = Array.from(document.querySelectorAll(".faq-item button"));
 const ctaLinks = Array.from(document.querySelectorAll(".js-cta"));
@@ -338,6 +340,56 @@ function setupHeader() {
   window.addEventListener("scroll", onScroll, { passive: true });
 }
 
+function setupMobileMenu() {
+  if (!menuToggle || !siteNav) {
+    return;
+  }
+
+  const closeMenu = () => {
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Abrir menu");
+    siteNav.classList.remove("is-open");
+  };
+
+  const openMenu = () => {
+    menuToggle.setAttribute("aria-expanded", "true");
+    menuToggle.setAttribute("aria-label", "Fechar menu");
+    siteNav.classList.add("is-open");
+  };
+
+  menuToggle.addEventListener("click", () => {
+    const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+    if (isOpen) {
+      closeMenu();
+      return;
+    }
+
+    openMenu();
+  });
+
+  siteNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!siteNav.classList.contains("is-open")) {
+      return;
+    }
+
+    if (siteNav.contains(event.target) || menuToggle.contains(event.target)) {
+      return;
+    }
+
+    closeMenu();
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 820) {
+      closeMenu();
+    }
+  });
+}
+
 function setupAnimations() {
   const candidates = document.querySelectorAll(".section, .hero-trust, .offer-highlight");
   candidates.forEach((element) => {
@@ -456,6 +508,7 @@ function init() {
   safeRun("setupInternalLinks", setupInternalLinks);
   safeRun("setupFaq", setupFaq);
   safeRun("setupHeader", setupHeader);
+  safeRun("setupMobileMenu", setupMobileMenu);
   safeRun("setupAnimations", setupAnimations);
   safeRun("setupMobileBar", setupMobileBar);
 }

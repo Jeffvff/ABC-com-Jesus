@@ -78,7 +78,7 @@
   <div class="promo-bar" id="promo-bar">
     <div class="container promo-bar__inner">
       <div class="promo-bar__timer-group" aria-live="polite">
-        <span class="promo-bar__label">Esta página sairá do ar em: </span>
+        <span class="promo-bar__label">Esta condição especial termina em:</span>
         <strong class="promo-bar__timer" id="offer-timer">00:00:00</strong>
       </div>
     </div>
@@ -89,55 +89,56 @@
       <a class="brand" href="#hero" aria-label="ABC com Jesus">
         <img src="./imagens/brand/logotipo-site.png" alt="Logo ABC com Jesus" width="1024" height="1024">
       </a>
-      <nav class="site-nav" aria-label="Navegação principal">
+      <nav class="site-nav" id="site-nav" aria-label="Navegação principal">
         <a href="#como-funciona">Como funciona</a>
         <a href="#inclui">O que você recebe</a>
         <a href="#ofertas">Ofertas</a>
         <a href="#faq">Dúvidas</a>
       </nav>
-      <a class="button button--header js-cta" data-plan="geral" href="#ofertas">Quero conhecer</a>
+      <div class="site-header__actions">
+        <a class="button button--header js-cta" data-plan="geral" href="#ofertas">
+          <span class="button__label-desktop">Quero conhecer</span>
+          <span class="button__label-mobile">Comprar</span>
+        </a>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </header>
 
   <main id="conteudo">
     <section class="hero" id="hero">
       <div class="container hero__grid">
-        <div class="hero__content">
-          <span class="eyebrow">Alfabetização cristã, visual e divertida</span>
-          <h1>Aprender a <span>ler e escrever</span> pode se transformar em um momento de <span>fé</span>, carinho e <span>descoberta</span>.</h1>
-          <p class="hero__lead">O ABC com Jesus reúne materiais digitais com mais de 600 atividades para ajudar crianças, jovens e adultos a aprender leitura e escrita por meio de exercícios visuais, imprimíveis e inspirados nos ensinamentos de Jesus.</p>
-          <p class="hero__subcopy">Use no celular, tablet ou computador e imprima as atividades sempre que precisar.</p>
+        <div class="hero__intro">
+          <span class="eyebrow hero__eyebrow">Alfabetização cristã, visual e divertida</span>
+          <h1>Mais de <span>600 atividades cristãs</span> para seu filho aprender a ler e escrever com <span>fé</span>, carinho e diversão.</h1>
+        </div>
 
-          <ul class="hero__benefits" aria-label="Benefícios rápidos">
-            <li>Mais de 600 atividades</li>
+        <div class="hero__visual" aria-label="Imagem promocional do ABC com Jesus">
+          <figure class="hero__figure">
+            <img src="./imagens/hero/hero-promocional-abc-com-jesus.png" alt="Kit promocional do ABC com Jesus com mais de 600 atividades cristãs, três bônus inclusos e preço de R$ 9,90" width="1536" height="1024" loading="eager" fetchpriority="high" decoding="async">
+          </figure>
+        </div>
+
+        <div class="hero__main">
+          <p class="hero__lead">O ABC com Jesus reúne <strong>atividades digitais prontas para usar</strong> no celular, tablet ou computador — e imprimir quando quiser. Um material completo para transformar a alfabetização em um momento de <strong>aprendizado, conexão e propósito</strong>.</p>
+
+          <ul class="hero__benefits" aria-label="Principais benefícios do material">
+            <li>Mais de 600 atividades cristãs</li>
             <li>Material digital e imprimível</li>
             <li>Acesso vitalício</li>
-            <li>Pagamento único</li>
-            <li>Conteúdo cristão</li>
-            <li>Uso em celular, tablet e computador</li>
+            <li>Funciona no celular, tablet e computador</li>
           </ul>
 
           <div class="hero__actions">
-            <a class="button button--primary" href="#ofertas">Quero começar com o ABC com Jesus</a>
+            <a class="button button--primary button--hero" href="#ofertas">QUERO VER OS PRODUTOS E ESCOLHER O MELHOR</a>
+            <span class="microcopy hero__cta-note">Veja a opção básica e a completa antes de comprar</span>
           </div>
-        </div>
 
-        <div class="hero__visual" aria-label="Prévia do material">
-          <div class="mockup-cluster">
-            <article class="mockup-card mockup-card--main">
-              <img src="./imagens/produto/capa-abc-com-jesus.webp" alt="Capa do material ABC com Jesus" width="1240" height="1754" fetchpriority="high">
-            </article>
-            <article class="mockup-card mockup-card--tablet">
-              <img src="./imagens/produto/atividade-amor.webp" alt="Página da atividade Amor" width="1241" height="1755">
-            </article>
-            <article class="mockup-card mockup-card--phone">
-              <img src="./imagens/produto/atividade-jesus.webp" alt="Página da atividade Jesus" width="1240" height="1754">
-            </article>
-            <article class="mockup-note">
-              <strong>Materiais digitais prontos para usar</strong>
-              <span>Visualize na tela ou imprima quando quiser.</span>
-            </article>
-          </div>
+          <p class="hero__social" aria-label="Prova social">★★★★★ Material criado para tornar o aprendizado mais leve, divertido e cheio de propósito.</p>
         </div>
       </div>
 
