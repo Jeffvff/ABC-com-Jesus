@@ -44,6 +44,10 @@ body {
     linear-gradient(180deg, #fffef9 0%, #fff9ee 100%);
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 img {
   max-width: 100%;
   display: block;
@@ -491,9 +495,14 @@ summary {
   line-height: 1.5;
 }
 
-.problem-grid,
-.included-grid {
+.problem-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.included-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 980px;
+  margin: 0 auto;
 }
 
 .product-media-grid {
@@ -594,6 +603,43 @@ summary {
 .step-card img {
   margin-bottom: 18px;
   background: linear-gradient(180deg, rgba(118, 189, 232, 0.18), rgba(255, 255, 255, 0.92));
+}
+
+@media (min-width: 1101px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .step-card {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .steps .step-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .step-card h3 {
+    font-size: 1.2rem;
+    line-height: 1.15;
+  }
+
+  .step-card p {
+    font-size: 0.98rem;
+    line-height: 1.45;
+  }
+
+  .step-card img {
+    width: 100%;
+    aspect-ratio: 16 / 8.5;
+    object-fit: cover;
+    border-radius: 18px;
+    margin-bottom: 12px;
+  }
 }
 
 .audience-grid {
@@ -899,12 +945,78 @@ summary {
   font-size: 1.05rem;
 }
 
-.testimonials {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.testimonials-carousel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+}
+
+.testimonials-carousel__viewport {
+  overflow: hidden;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.testimonials-carousel__track {
+  display: flex;
+  transition: transform 0.45s ease;
+  will-change: transform;
+  touch-action: pan-y;
 }
 
 .testimonial-card {
-  padding: 14px;
+  flex: 0 0 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 10px;
+}
+
+.testimonials-carousel__arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(51, 170, 152, 0.9);
+  background: rgba(255, 255, 255, 0.92);
+  color: #2ea99a;
+  font: inherit;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.testimonials-carousel__arrow:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 1);
+}
+
+.testimonials-carousel__dots {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.testimonials-carousel__dot {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  padding: 0;
+  flex: 0 0 12px;
+  aspect-ratio: 1 / 1;
+  display: block;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(37, 52, 59, 0.18);
+  cursor: pointer;
+}
+
+.testimonials-carousel__dot.is-active {
+  background: #2ea99a;
 }
 
 .guarantee {
@@ -982,6 +1094,127 @@ summary {
   margin: 0;
   color: var(--color-muted);
   line-height: 1.7;
+}
+
+.upsell-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.upsell-modal[hidden] {
+  display: none;
+}
+
+.upsell-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(37, 52, 59, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.upsell-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 560px);
+  padding: 34px 30px 28px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 215, 106, 0.2), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 249, 238, 0.98));
+  border: 1px solid rgba(40, 90, 117, 0.12);
+  box-shadow: 0 24px 56px rgba(40, 90, 117, 0.18);
+  text-align: center;
+}
+
+.upsell-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #8a97a1;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.upsell-modal__eyebrow {
+  display: inline-flex;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgb(255, 0, 0);
+  color: #fffffe;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.upsell-modal__dialog h2 {
+  margin: 18px 0 12px;
+  font-family: "Fredoka", sans-serif;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  line-height: 1.06;
+}
+
+.upsell-modal__lead,
+.upsell-modal__copy,
+.upsell-modal__microcopy {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.upsell-modal__lead {
+  font-size: 1.08rem;
+}
+
+.upsell-modal__copy {
+  margin-top: 22px;
+  font-size: 1.1rem;
+}
+
+.upsell-modal__old-price {
+  color: #d15b3e;
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+}
+
+.upsell-modal__new-price {
+  font-family: "Fredoka", sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  color: #258b78;
+}
+
+.upsell-modal__microcopy {
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.upsell-modal__actions {
+  display: grid;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.upsell-modal__actions .button {
+  width: 100%;
+}
+
+.upsell-modal__secondary {
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .cta-final__inner {
@@ -1108,7 +1341,6 @@ summary {
   .hero__grid,
   .solution__grid,
   .steps,
-  .testimonials,
   .stats__grid,
   .problem-grid,
   .included-grid,
@@ -1291,13 +1523,13 @@ summary {
   }
 
   .offers {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    grid-template-columns: 1fr;
+    gap: 16px;
     align-items: start;
   }
 
   .offer-card {
-    padding: 18px 14px;
+    padding: 22px 18px;
   }
 
   .offer-tag {
@@ -1307,11 +1539,11 @@ summary {
   }
 
   .offer-card h3 {
-    font-size: 1.2rem;
+    font-size: 1.35rem;
   }
 
   .offer-card__kicker {
-    font-size: 0.88rem;
+    font-size: 0.94rem;
   }
 
   .offer-card__description {
@@ -1363,7 +1595,7 @@ summary {
   }
 
   .offer-card__price {
-    font-size: clamp(2rem, 8vw, 2.8rem);
+    font-size: clamp(2.4rem, 12vw, 3.4rem);
   }
 
   .offer-card__installments,
@@ -1376,6 +1608,18 @@ summary {
     line-height: 1.4;
   }
 
+  .offer-card__description,
+  .offer-card__microcopy,
+  .offer-card__payments,
+  .offer-card__meta {
+    display: none;
+  }
+
+  .offer-card__social-proof {
+    margin-top: 12px;
+    padding: 10px 12px;
+  }
+
   .offer-card__preview--single img,
   .offer-card__preview--single-featured img {
     border-radius: 14px;
@@ -1386,15 +1630,19 @@ summary {
   }
 
   .checklist li {
-    font-size: 0.88rem;
-    line-height: 1.35;
+    font-size: 0.94rem;
+    line-height: 1.4;
+  }
+
+  .offer-card .checklist li:nth-child(n + 5) {
+    display: none;
   }
 
   .offer-card .button {
     margin-top: 18px;
-    min-height: 48px;
-    padding: 12px 14px;
-    font-size: 0.92rem;
+    min-height: 52px;
+    padding: 14px 16px;
+    font-size: 1rem;
   }
 
   .solution__grid {
@@ -1404,11 +1652,6 @@ summary {
   .pillars {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
-  }
-
-  .pillars .pillar:last-child {
-    grid-column: 1 / -1;
-    max-width: none;
   }
 
   .pillar {
@@ -1431,6 +1674,31 @@ summary {
 
   .solution__grid .showcase {
     display: none;
+  }
+
+  .testimonials-carousel {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .testimonials-carousel__viewport {
+    max-width: 340px;
+  }
+
+  .testimonials-carousel__arrow {
+    display: none;
+  }
+
+  .testimonial-card {
+    padding: 8px;
+  }
+
+  .testimonials-carousel__dot {
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    min-height: 10px;
+    flex-basis: 10px;
   }
 
   .steps {
@@ -1482,6 +1750,44 @@ summary {
     font-size: 0.76rem;
     line-height: 1.25;
     text-align: center;
+  }
+
+  .bonus-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .bonus-card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .bonus-card img {
+    display: block;
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 14px;
+  }
+
+  .bonus-card .checklist,
+  .bonus-card__value {
+    display: none;
+  }
+
+  .bonus-card h3 {
+    margin-bottom: 8px;
+    font-size: 1.02rem;
+    line-height: 1.25;
+  }
+
+  .bonus-card p {
+    font-size: 0.92rem;
+    line-height: 1.45;
   }
 
   .product-media-grid,

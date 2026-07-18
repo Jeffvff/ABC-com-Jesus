@@ -18,6 +18,32 @@
   <link rel="icon" href="./imagens/brand/logotipo-site.png" type="image/png">
   <link rel="apple-touch-icon" href="./imagens/brand/apple-touch-icon.png">
   <link rel="stylesheet" href="./style.css">
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1000159813003016');
+    fbq('track', 'PageView');
+  </script>
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
+  <script>
+    window.pixelId = "6a56c388123590a858b09443";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
   <script type="application/ld+json" id="product-jsonld">
   {
     "@context": "https://schema.org",
@@ -42,6 +68,11 @@
   </script>
 </head>
 <body>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1000159813003016&ev=PageView&noscript=1"
+      alt="">
+  </noscript>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
 
   <div class="promo-bar" id="promo-bar">
@@ -170,12 +201,7 @@
             <article class="pillar"><h3>Uma letra por vez</h3><p>O conteúdo pode ser trabalhado gradualmente, respeitando o tempo e as necessidades de cada pessoa.</p></article>
             <article class="pillar"><h3>Aprendizado visual</h3><p>Ilustrações, cores, letras grandes e atividades práticas ajudam a tornar o conteúdo mais envolvente.</p></article>
             <article class="pillar"><h3>Conteúdo cristão</h3><p>As atividades apresentam palavras, valores e mensagens inspiradas nos ensinamentos de Jesus.</p></article>
-            <article class="pillar"><h3>Pronto para imprimir</h3><p>Baixe o material, escolha as páginas e imprima sempre que desejar.</p></article>
-            <article class="pillar"><h3>Uso flexível</h3><p>Pode ser utilizado em casa, na igreja, na escola, em atendimentos ou em momentos de estudo individual.</p></article>
-          </div>
-          <div class="showcase">
-            <img src="./imagens/produto/boas-vindas.webp" alt="Página de boas-vindas do material" width="1240" height="1754" loading="lazy" decoding="async">
-            <img src="./imagens/produto/como-utilizar.webp" alt="Página de orientações de uso do material" width="1240" height="1754" loading="lazy" decoding="async">
+            <article class="pillar"><h3>Pronto para imprimir</h3><p>Baixe o material, escolha as páginas e imprima sempre que desejar. Pode ser utilizado em casa, na igreja, na escola, em atendimentos ou em momentos de estudo individual.</p></article>
           </div>
         </div>
         <a class="button button--primary js-cta" data-plan="completo" href="#ofertas">Quero ensinar com fé e carinho</a>
@@ -407,16 +433,31 @@
           <h2>Mensagens de quem já está usando o material</h2>
           <p>Prova social baseada em prints enviados, sem avaliações inventadas e sem números fictícios.</p>
         </div>
-        <div class="testimonials">
-          <figure class="testimonial-card">
-            <img src="./imagens/depoimentos/depoimento-01.webp" alt="Depoimento de cliente dizendo que as atividades estão ajudando muito os pacientes" width="1200" height="1647" loading="lazy" decoding="async">
-          </figure>
-          <figure class="testimonial-card">
-            <img src="./imagens/depoimentos/depoimento-02.webp" alt="Depoimento de cliente agradecendo e relatando evolução na fala" width="1200" height="1659" loading="lazy" decoding="async">
-          </figure>
-          <figure class="testimonial-card">
-            <img src="./imagens/depoimentos/depoimento-03.webp" alt="Depoimento de cliente dizendo que os materiais estão ajudando muito" width="1197" height="1288" loading="lazy" decoding="async">
-          </figure>
+        <div class="testimonials-carousel" data-testimonials-carousel>
+          <button class="testimonials-carousel__arrow testimonials-carousel__arrow--prev" type="button" aria-label="Depoimento anterior" data-testimonial-prev>
+            <span aria-hidden="true">←</span>
+          </button>
+          <div class="testimonials-carousel__viewport">
+            <div class="testimonials-carousel__track" data-testimonial-track>
+              <figure class="testimonial-card is-active" data-testimonial-slide>
+                <img src="./imagens/depoimentos/depoimento-01.webp" alt="Depoimento de cliente dizendo que as atividades estão ajudando muito os pacientes" width="1200" height="1647" loading="lazy" decoding="async">
+              </figure>
+              <figure class="testimonial-card" data-testimonial-slide>
+                <img src="./imagens/depoimentos/depoimento-02.webp" alt="Depoimento de cliente agradecendo e relatando evolução na fala" width="1200" height="1659" loading="lazy" decoding="async">
+              </figure>
+              <figure class="testimonial-card" data-testimonial-slide>
+                <img src="./imagens/depoimentos/depoimento-03.webp" alt="Depoimento de cliente dizendo que os materiais estão ajudando muito" width="1197" height="1288" loading="lazy" decoding="async">
+              </figure>
+            </div>
+          </div>
+          <button class="testimonials-carousel__arrow testimonials-carousel__arrow--next" type="button" aria-label="Próximo depoimento" data-testimonial-next>
+            <span aria-hidden="true">→</span>
+          </button>
+          <div class="testimonials-carousel__dots" aria-label="Indicadores de depoimentos">
+            <button class="testimonials-carousel__dot is-active" type="button" aria-label="Ir para depoimento 1" data-testimonial-dot="0"></button>
+            <button class="testimonials-carousel__dot" type="button" aria-label="Ir para depoimento 2" data-testimonial-dot="1"></button>
+            <button class="testimonials-carousel__dot" type="button" aria-label="Ir para depoimento 3" data-testimonial-dot="2"></button>
+          </div>
         </div>
       </div>
     </section>
@@ -522,6 +563,22 @@
     </section>
 
   </main>
+
+  <div class="upsell-modal" id="upsell-modal" hidden aria-hidden="true">
+    <div class="upsell-modal__backdrop" data-upsell-close></div>
+    <div class="upsell-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="upsell-title">
+      <button class="upsell-modal__close" type="button" aria-label="Fechar oferta especial" data-upsell-close>×</button>
+      <span class="upsell-modal__eyebrow">Oferta especial</span>
+      <h2 id="upsell-title">Espera! Temos uma oferta exclusiva pra você</h2>
+      <p class="upsell-modal__lead">Aproveite e leve o <strong>ABC com Jesus Completo</strong> por um valor promocional antes de finalizar sua compra.</p>
+      <p class="upsell-modal__copy">De <span class="upsell-modal__old-price">R$ 59,90</span> por apenas <strong class="upsell-modal__new-price">R$ 17,90</strong>.</p>
+      <p class="upsell-modal__microcopy">Pagamento único. Acesso imediato.</p>
+      <div class="upsell-modal__actions">
+        <a class="button button--primary" href="#ofertas" id="upsell-accept">Quero o completo com desconto</a>
+        <button class="upsell-modal__secondary" type="button" id="upsell-decline">Não, quero apenas o produto simples</button>
+      </div>
+    </div>
+  </div>
 
   <script src="./script.js" defer></script>
 </body>

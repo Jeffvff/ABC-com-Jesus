@@ -1,12 +1,14 @@
 const CONFIG = {
-  checkoutEssencialUrl: "",
-  checkoutCompletoUrl: "",
+  checkoutEssencialUrl: "https://pay.wiapy.com/OeaMu7-JGnPJ",
+  checkoutCompletoUrl: "https://pay.wiapy.com/j393hU7VdeF0",
+  checkoutUpsellUrl: "https://pay.wiapy.com/GkRnsGs3ftlI",
   canonicalUrl: "",
   privacyUrl: "",
   termsUrl: "",
   contactUrl: "",
   precoEssencial: "9,90",
   precoCompleto: "27,90",
+  precoUpsellCompleto: "17,90",
   precoOriginalEssencial: "29,90",
   precoOriginalCompleto: "59,90",
   parcelasEssencial: "6x de R$ 1,65",
@@ -29,7 +31,20 @@ const internalLinks = Array.from(document.querySelectorAll('a[href^="#"]'));
 const mobileBar = document.querySelector("#mobile-bar");
 const mobileBarClose = document.querySelector("#mobile-bar-close");
 const offersSection = document.querySelector("#ofertas");
+const testimonialsCarousel = document.querySelector("[data-testimonials-carousel]");
+const upsellModal = document.querySelector("#upsell-modal");
+const upsellAccept = document.querySelector("#upsell-accept");
+const upsellDecline = document.querySelector("#upsell-decline");
 let activeScrollAnimation = null;
+let pendingEssencialCheckoutUrl = "";
+
+function trackMetaEvent(eventName, params = {}) {
+  if (typeof window.fbq !== "function") {
+    return;
+  }
+
+  window.fbq("trackCustom", eventName, params);
+}
 
 function padNumber(value) {
   return String(value).padStart(2, "0");
@@ -93,6 +108,10 @@ function getCheckoutUrl(plan) {
   return "";
 }
 
+function getUpsellCheckoutUrl() {
+  return buildCheckoutUrl(CONFIG.checkoutUpsellUrl || CONFIG.checkoutCompletoUrl);
+}
+
 function getScrollOffset() {
   const headerHeight = header?.offsetHeight ?? 0;
   return headerHeight + 18;
@@ -148,13 +167,62 @@ function handleCtaClick(event) {
   const plan = link.dataset.plan || "geral";
   const checkoutUrl = getCheckoutUrl(plan);
 
+  if (plan === "essencial" && upsellModal) {
+    event.preventDefault();
+    pendingEssencialCheckoutUrl = checkoutUrl;
+    trackMetaEvent("CliqueProduto1", {
+      produto: "ABC com Jesus",
+      preco: CONFIG.precoEssencial
+    });
+    openUpsellModal();
+    return;
+  }
+
   if (!checkoutUrl) {
     event.preventDefault();
     smoothScrollToElement(offersSection);
     return;
   }
 
+  if (plan === "completo") {
+    trackMetaEvent("CliqueProduto2", {
+      produto: "ABC com Jesus Completo",
+      preco: CONFIG.precoCompleto
+    });
+  } else if (plan === "geral") {
+    trackMetaEvent("CliqueBotaoGeral", {
+      destino: "ofertas"
+    });
+  }
+
   link.setAttribute("href", checkoutUrl);
+}
+
+function openUpsellModal() {
+  if (!upsellModal) {
+    return;
+  }
+
+  const upsellUrl = getUpsellCheckoutUrl();
+  if (upsellAccept && upsellUrl) {
+    upsellAccept.setAttribute("href", upsellUrl);
+    upsellAccept.setAttribute("target", "_blank");
+    upsellAccept.setAttribute("rel", "noopener noreferrer");
+  }
+
+  upsellModal.hidden = false;
+  upsellModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function closeUpsellModal() {
+  if (!upsellModal) {
+    return;
+  }
+
+  upsellModal.hidden = true;
+  upsellModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
 }
 
 function setupCtas() {
@@ -196,6 +264,46 @@ function setupInternalLinks() {
         window.history.replaceState(null, "", href);
       }
     });
+  });
+}
+
+function setupUpsellModal() {
+  if (!upsellModal) {
+    return;
+  }
+
+  upsellModal.querySelectorAll("[data-upsell-close]").forEach((element) => {
+    element.addEventListener("click", closeUpsellModal);
+  });
+
+  upsellDecline?.addEventListener("click", () => {
+    trackMetaEvent("RecusouOfertaUpsell", {
+      produto: "ABC com Jesus",
+      oferta_recusada: CONFIG.precoUpsellCompleto
+    });
+    closeUpsellModal();
+
+    if (pendingEssencialCheckoutUrl) {
+      window.open(pendingEssencialCheckoutUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    smoothScrollToElement(offersSection);
+  });
+
+  upsellAccept?.addEventListener("click", () => {
+    trackMetaEvent("CliqueProdutoDesconto", {
+      produto: "ABC com Jesus Completo",
+      preco_promocional: CONFIG.precoUpsellCompleto,
+      preco_original: CONFIG.precoOriginalCompleto
+    });
+    closeUpsellModal();
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && upsellModal && !upsellModal.hidden) {
+      closeUpsellModal();
+    }
   });
 }
 
@@ -243,6 +351,138 @@ function setupAnimations() {
   }, { threshold: 0.12 });
 
   candidates.forEach((element) => observer.observe(element));
+}
+
+function setupTestimonialsCarousel() {
+  if (!testimonialsCarousel) {
+    return;
+  }
+
+  const track = testimonialsCarousel.querySelector("[data-testimonial-track]");
+  const slides = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-slide]"));
+  const dots = Array.from(testimonialsCarousel.querySelectorAll("[data-testimonial-dot]"));
+  const prevButton = testimonialsCarousel.querySelector("[data-testimonial-prev]");
+  const nextButton = testimonialsCarousel.querySelector("[data-testimonial-next]");
+
+  if (!track || slides.length === 0) {
+    return;
+  }
+
+  let activeIndex = 0;
+  let autoplayId = null;
+  let touchStartX = 0;
+  let touchCurrentX = 0;
+  let isDragging = false;
+
+  const getViewportWidth = () => testimonialsCarousel.querySelector(".testimonials-carousel__viewport")?.clientWidth ?? 1;
+
+  const applyTranslate = (offsetPx = 0, withTransition = true) => {
+    track.style.transition = withTransition ? "transform 0.45s ease" : "none";
+    track.style.transform = `translateX(calc(-${activeIndex * 100}% + ${offsetPx}px))`;
+  };
+
+  const renderSlide = () => {
+    applyTranslate();
+
+    slides.forEach((slide, index) => {
+      slide.classList.toggle("is-active", index === activeIndex);
+    });
+
+    dots.forEach((dot, index) => {
+      const isActive = index === activeIndex;
+      dot.classList.toggle("is-active", isActive);
+      dot.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+  };
+
+  const goToSlide = (index) => {
+    activeIndex = (index + slides.length) % slides.length;
+    renderSlide();
+  };
+
+  const stopAutoplay = () => {
+    if (autoplayId) {
+      window.clearInterval(autoplayId);
+      autoplayId = null;
+    }
+  };
+
+  const startAutoplay = () => {
+    stopAutoplay();
+    autoplayId = window.setInterval(() => {
+      goToSlide(activeIndex + 1);
+    }, 5000);
+  };
+
+  prevButton?.addEventListener("click", () => {
+    goToSlide(activeIndex - 1);
+    startAutoplay();
+  });
+
+  nextButton?.addEventListener("click", () => {
+    goToSlide(activeIndex + 1);
+    startAutoplay();
+  });
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      goToSlide(index);
+      startAutoplay();
+    });
+  });
+
+  testimonialsCarousel.addEventListener("mouseenter", stopAutoplay);
+  testimonialsCarousel.addEventListener("mouseleave", startAutoplay);
+  testimonialsCarousel.addEventListener("focusin", stopAutoplay);
+  testimonialsCarousel.addEventListener("focusout", startAutoplay);
+  testimonialsCarousel.addEventListener("touchstart", (event) => {
+    stopAutoplay();
+    touchStartX = event.changedTouches[0]?.clientX ?? 0;
+    touchCurrentX = touchStartX;
+    isDragging = true;
+    track.style.transition = "none";
+  }, { passive: true });
+
+  testimonialsCarousel.addEventListener("touchmove", (event) => {
+    if (!isDragging) {
+      return;
+    }
+
+    touchCurrentX = event.changedTouches[0]?.clientX ?? touchCurrentX;
+    const deltaX = touchCurrentX - touchStartX;
+    applyTranslate(deltaX, false);
+  }, { passive: true });
+
+  testimonialsCarousel.addEventListener("touchend", () => {
+    if (!isDragging) {
+      return;
+    }
+
+    isDragging = false;
+    const deltaX = touchCurrentX - touchStartX;
+    const threshold = getViewportWidth() * 0.14;
+
+    if (Math.abs(deltaX) > threshold) {
+      if (deltaX < 0) {
+        goToSlide(activeIndex + 1);
+      } else {
+        goToSlide(activeIndex - 1);
+      }
+    } else {
+      renderSlide();
+    }
+
+    startAutoplay();
+  }, { passive: true });
+
+  testimonialsCarousel.addEventListener("touchcancel", () => {
+    isDragging = false;
+    renderSlide();
+    startAutoplay();
+  }, { passive: true });
+
+  renderSlide();
+  startAutoplay();
 }
 
 function setupConfigDrivenContent() {
@@ -333,11 +573,13 @@ function setupMobileBar() {
 
 function init() {
   setupConfigDrivenContent();
+  setupUpsellModal();
   setupCtas();
   setupInternalLinks();
   setupFaq();
   setupHeader();
   setupAnimations();
+  setupTestimonialsCarousel();
   setupMobileBar();
   updateTimer();
   window.setInterval(updateTimer, 1000);
