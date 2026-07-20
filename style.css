@@ -1912,17 +1912,19 @@ summary {
 
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(520px, 1.18fr);
+  grid-template-columns: minmax(0, 0.96fr) minmax(520px, 1.14fr);
   grid-template-areas:
     "intro visual"
     "main visual";
   align-items: start;
-  gap: 14px 34px;
+  gap: 10px 40px;
 }
 
 .hero__intro {
   grid-area: intro;
   max-width: 660px;
+  display: grid;
+  gap: 10px;
 }
 
 .hero__main {
@@ -1930,6 +1932,7 @@ summary {
   max-width: 660px;
   margin-top: 0;
   display: grid;
+  align-content: start;
 }
 
 .hero h1 {
@@ -1937,6 +1940,7 @@ summary {
   font-size: clamp(2rem, 2.9vw, 3.15rem);
   line-height: 0.94;
   max-width: 14.8ch;
+  text-wrap: balance;
 }
 
 .hero h1 span {
@@ -1948,16 +1952,17 @@ summary {
   color: var(--color-primary-deep);
   border: 1px solid rgba(255, 215, 106, 0.54);
   box-shadow: 0 10px 20px rgba(255, 215, 106, 0.16);
+  justify-self: start;
 }
 
 .hero__benefits {
   margin: 16px 0 0;
-  max-width: 640px;
+  max-width: 540px;
   padding: 0;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 14px;
+  gap: 10px 16px;
   order: 4;
 }
 
@@ -1975,16 +1980,16 @@ summary {
 }
 
 .hero__actions {
-  margin-top: 18px;
+  margin-top: 16px;
   display: grid;
   gap: 8px;
-  max-width: 560px;
+  max-width: 500px;
   order: 1;
 }
 
 .button--hero {
   min-height: 64px;
-  padding: 18px 28px;
+  padding: 18px 26px;
   border-radius: 20px;
   font-size: 1rem;
   letter-spacing: 0.01em;
@@ -2011,22 +2016,22 @@ summary {
 
 .hero__visual {
   grid-area: visual;
-  align-self: start;
+  align-self: center;
   position: relative;
-  margin-top: -2px;
+  margin-top: 6px;
   max-width: 760px;
   width: 100%;
 }
 
 .hero__figure {
   margin: 0;
-  padding: 12px;
-  border-radius: 28px;
+  padding: 14px;
+  border-radius: 30px;
   background:
     radial-gradient(circle at top right, rgba(255, 215, 106, 0.3), transparent 28%),
     radial-gradient(circle at left center, rgba(143, 207, 173, 0.24), transparent 34%),
     linear-gradient(180deg, rgba(118, 189, 232, 0.18), rgba(255, 255, 255, 0.96));
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 24px 48px rgba(40, 90, 117, 0.16);
   overflow: clip;
 }
 
@@ -2039,8 +2044,10 @@ summary {
 .hero__lead {
   font-size: 0.84rem;
   line-height: 1.42;
-  max-width: 560px;
+  max-width: 520px;
   order: 2;
+  margin-top: 12px;
+  text-wrap: pretty;
 }
 
 .hero__lead strong {
@@ -2049,6 +2056,10 @@ summary {
 
 .hero-trust {
   padding: 12px 0 0;
+}
+
+.hero-trust__list {
+  gap: 14px;
 }
 
 .hero-trust__list span {
@@ -2075,13 +2086,13 @@ summary {
 
   .hero__grid {
     flex: 1 1 auto;
-    align-content: start;
+    align-content: center;
   }
 
   .hero-trust {
-    padding-top: 4px;
+    padding-top: 2px;
     margin-top: auto;
-    transform: translateY(-12px);
+    transform: translateY(-8px);
   }
 }
 
@@ -2107,6 +2118,7 @@ summary {
   .hero__visual {
     max-width: 920px;
     margin: 0 auto;
+    align-self: start;
   }
 
   .hero__social {
@@ -2179,11 +2191,12 @@ summary {
   }
 
   .hero__grid {
-    gap: 18px;
+    gap: 14px;
   }
 
   .hero__main {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 
   .hero__figure {
@@ -2223,24 +2236,31 @@ summary {
     display: grid;
     justify-items: center;
     width: 100%;
+    gap: 8px;
   }
 
   .hero__eyebrow {
     justify-self: center;
     text-align: center;
+    padding: 9px 14px;
+    font-size: 0.88rem;
   }
 
   .hero h1 {
     width: 100%;
     max-width: none;
     font-size: clamp(1.28rem, 5.5vw, 1.72rem);
-    line-height: 1.04;
+    line-height: 1.02;
     text-align: left;
+    text-wrap: pretty;
   }
 
   .hero__lead {
-    font-size: 1rem;
-    line-height: 1.65;
+    order: 3;
+    margin-top: 10px;
+    font-size: 0.94rem;
+    line-height: 1.58;
+    max-width: none;
   }
 
   .hero__visual {
@@ -2248,44 +2268,70 @@ summary {
   }
 
   .hero__figure {
-    padding: 10px;
-  }
-
-  .hero__offer-card {
-    padding: 18px 16px;
+    padding: 8px;
     border-radius: 24px;
   }
 
-  .hero__offer-topline,
-  .hero__offer-meta span {
-    font-size: 0.86rem;
+  .hero__figure img {
+    border-radius: 18px;
   }
 
-  .hero__offer-price strong {
-    font-size: clamp(2.5rem, 13vw, 3.45rem);
+  .hero__actions {
+    order: 2;
+    margin-top: 14px;
+    max-width: none;
   }
 
   .button--hero {
-    min-height: 60px;
-    padding: 16px 18px;
-    font-size: 0.96rem;
+    min-height: 56px;
+    padding: 15px 18px;
+    font-size: 0.9rem;
+    border-radius: 18px;
+  }
+
+  .hero__cta-note {
+    font-size: 0.76rem;
+  }
+
+  .hero__benefits {
+    order: 4;
+    margin-top: 14px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .hero__benefits li {
+    min-height: 20px;
+    padding-left: 26px;
+    font-size: 0.88rem;
+    line-height: 1.3;
   }
 
   .hero__social {
-    font-size: 0.92rem;
+    order: 5;
+    margin-top: 12px;
+    font-size: 0.86rem;
+    line-height: 1.42;
   }
 
   .hero-trust__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 10px;
   }
 
   .hero-trust__list span {
-    min-height: 72px;
-    padding: 10px 8px;
+    min-height: 64px;
+    padding: 10px 10px;
     border-radius: 18px;
     flex-direction: column;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
+  .hero-trust__list span svg {
+    width: 22px;
+    height: 22px;
+    margin-bottom: 4px;
   }
 }
 
