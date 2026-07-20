@@ -124,13 +124,41 @@ function easeInOutCubic(progress) {
     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 }
 
+function alignMobileOffers() {
+  if (!offersSection || window.innerWidth > MOBILE_BREAKPOINT) {
+    return;
+  }
+
+  const firstOfferCard = offersSection.querySelector(".offer-card");
+  if (!firstOfferCard) {
+    return;
+  }
+
+  const headerBottom = header?.getBoundingClientRect().bottom ?? 0;
+  const sectionTop = offersSection.getBoundingClientRect().top;
+  const cardBottom = firstOfferCard.getBoundingClientRect().bottom;
+  const groupHeight = cardBottom - sectionTop;
+  const availableHeight = window.innerHeight - headerBottom;
+  const topSpace = Math.max((availableHeight - groupHeight) / 2, 8);
+  const desiredSectionTop = headerBottom + topSpace;
+
+  window.scrollTo(0, Math.max(window.scrollY + sectionTop - desiredSectionTop, 0));
+}
+
 function smoothScrollToElement(element) {
   if (!element) {
     return;
   }
 
   const startY = window.scrollY;
-  const targetTop = Math.max(element.getBoundingClientRect().top + window.scrollY - getScrollOffset(), 0);
+  let targetTop = element.getBoundingClientRect().top + window.scrollY - getScrollOffset();
+
+  if (element === offersSection && window.innerWidth <= MOBILE_BREAKPOINT) {
+    const sectionTop = offersSection.getBoundingClientRect().top + window.scrollY;
+    targetTop = sectionTop - 68;
+  }
+
+  targetTop = Math.max(targetTop, 0);
   const distance = targetTop - startY;
 
   if (Math.abs(distance) < 8) {
@@ -158,6 +186,11 @@ function smoothScrollToElement(element) {
     }
 
     activeScrollAnimation = null;
+    if (element === offersSection) {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(alignMobileOffers);
+      });
+    }
   };
 
   activeScrollAnimation = window.requestAnimationFrame(animateScroll);
