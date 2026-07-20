@@ -135,14 +135,10 @@ function alignMobileOffers() {
   }
 
   const headerBottom = header?.getBoundingClientRect().bottom ?? 0;
-  const sectionTop = offersSection.getBoundingClientRect().top;
-  const cardBottom = firstOfferCard.getBoundingClientRect().bottom;
-  const groupHeight = cardBottom - sectionTop;
-  const availableHeight = window.innerHeight - headerBottom;
-  const topSpace = Math.max((availableHeight - groupHeight) / 2, 8);
-  const desiredSectionTop = headerBottom + topSpace;
+  const cardTop = firstOfferCard.getBoundingClientRect().top;
+  const desiredCardTop = headerBottom + 10;
 
-  window.scrollTo(0, Math.max(window.scrollY + sectionTop - desiredSectionTop, 0));
+  window.scrollTo(0, Math.max(window.scrollY + cardTop - desiredCardTop, 0));
 }
 
 function smoothScrollToElement(element) {
@@ -154,8 +150,12 @@ function smoothScrollToElement(element) {
   let targetTop = element.getBoundingClientRect().top + window.scrollY - getScrollOffset();
 
   if (element === offersSection && window.innerWidth <= MOBILE_BREAKPOINT) {
-    const sectionTop = offersSection.getBoundingClientRect().top + window.scrollY;
-    targetTop = sectionTop - 68;
+    const firstOfferCard = offersSection.querySelector(".offer-card");
+    const headerHeight = header?.offsetHeight ?? 0;
+
+    if (firstOfferCard) {
+      targetTop = firstOfferCard.getBoundingClientRect().top + window.scrollY - headerHeight - 10;
+    }
   }
 
   targetTop = Math.max(targetTop, 0);
