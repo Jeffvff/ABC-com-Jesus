@@ -33,7 +33,6 @@ const offersSection = document.querySelector("#ofertas");
 const upsellModal = document.querySelector("#upsell-modal");
 const upsellAccept = document.querySelector("#upsell-accept");
 const upsellDecline = document.querySelector("#upsell-decline");
-const checkoutLinks = Array.from(document.querySelectorAll(".go-to-checkout"));
 let activeScrollAnimation = null;
 let pendingEssencialCheckoutUrl = "";
 
@@ -124,24 +123,6 @@ function getCheckoutUrl(plan) {
 
 function getUpsellCheckoutUrl() {
   return buildCheckoutUrl(CONFIG.checkoutUpsellUrl || CONFIG.checkoutCompletoUrl);
-}
-
-function navigateToCheckout(url) {
-  if (!url) {
-    return;
-  }
-
-  window.location.href = url;
-}
-
-function navigateAfterTracking(url) {
-  if (!url) {
-    return;
-  }
-
-  window.setTimeout(() => {
-    navigateToCheckout(url);
-  }, 700);
 }
 
 function getScrollOffset() {
@@ -377,24 +358,6 @@ function setupUpsellModal() {
   });
 }
 
-function setupCheckoutLinks() {
-  checkoutLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      if (event.defaultPrevented) {
-        return;
-      }
-
-      const href = link.getAttribute("href");
-      if (!href) {
-        return;
-      }
-
-      event.preventDefault();
-      navigateAfterTracking(href);
-    });
-  });
-}
-
 function setupFaq() {
   faqButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -583,7 +546,6 @@ function init() {
   safeRun("setupConfigDrivenContent", setupConfigDrivenContent);
   safeRun("setupUpsellModal", setupUpsellModal);
   safeRun("setupCtas", setupCtas);
-  safeRun("setupCheckoutLinks", setupCheckoutLinks);
   safeRun("setupInternalLinks", setupInternalLinks);
   safeRun("setupFaq", setupFaq);
   safeRun("setupHeader", setupHeader);
