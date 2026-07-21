@@ -44,6 +44,26 @@ function trackMetaEvent(eventName, params = {}) {
   window.fbq("trackCustom", eventName, params);
 }
 
+function trackInitiateCheckout(plan) {
+  if (typeof window.fbq !== "function") {
+    return;
+  }
+
+  const isComplete = plan === "completo";
+  const productName = isComplete ? "ABC com Jesus Completo" : "ABC com Jesus";
+  const value = Number((isComplete ? CONFIG.precoCompleto : CONFIG.precoEssencial).replace(",", "."));
+
+  window.fbq("track", "InitiateCheckout", {
+    content_ids: [plan],
+    content_name: productName,
+    content_type: "product",
+    contents: [{ id: plan, quantity: 1, item_price: value }],
+    currency: "BRL",
+    num_items: 1,
+    value
+  });
+}
+
 function padNumber(value) {
   return String(value).padStart(2, "0");
 }
@@ -204,6 +224,7 @@ function handleCtaClick(event) {
   if (plan === "essencial" && upsellModal) {
     event.preventDefault();
     pendingEssencialCheckoutUrl = checkoutUrl;
+    trackInitiateCheckout("essencial");
     trackMetaEvent("CliqueProduto1", {
       produto: "ABC com Jesus",
       preco: CONFIG.precoEssencial
@@ -219,6 +240,7 @@ function handleCtaClick(event) {
   }
 
   if (plan === "completo") {
+    trackInitiateCheckout("completo");
     trackMetaEvent("CliqueProduto2", {
       produto: "ABC com Jesus Completo",
       preco: CONFIG.precoCompleto
