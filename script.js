@@ -285,7 +285,7 @@ function setupCtas() {
     const checkoutUrl = getCheckoutUrl(plan);
 
     if (plan === "essencial" && upsellModal) {
-      link.setAttribute("href", "#ofertas");
+      link.setAttribute("href", checkoutUrl || "#ofertas");
       link.removeAttribute("target");
       link.removeAttribute("rel");
       link.addEventListener("click", handleCtaClick);
@@ -305,7 +305,7 @@ function setupCtas() {
 function setupInternalLinks() {
   internalLinks.forEach((link) => {
     const href = link.getAttribute("href");
-    if (!href || href === "#") {
+    if (!href || href === "#" || !href.startsWith("#")) {
       return;
     }
 
