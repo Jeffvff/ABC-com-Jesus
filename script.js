@@ -224,7 +224,6 @@ function handleCtaClick(event) {
   if (plan === "essencial" && upsellModal) {
     event.preventDefault();
     pendingEssencialCheckoutUrl = checkoutUrl;
-    trackInitiateCheckout("essencial");
     trackMetaEvent("CliqueProduto1", {
       produto: "ABC com Jesus",
       preco: CONFIG.precoEssencial
@@ -264,6 +263,11 @@ function openUpsellModal() {
     upsellAccept.setAttribute("href", upsellUrl);
   }
 
+  const essentialUrl = pendingEssencialCheckoutUrl || getCheckoutUrl("essencial");
+  if (upsellDecline && essentialUrl) {
+    upsellDecline.setAttribute("href", essentialUrl);
+  }
+
   upsellModal.hidden = false;
   upsellModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
@@ -285,10 +289,10 @@ function setupCtas() {
     const checkoutUrl = getCheckoutUrl(plan);
 
     if (plan === "essencial" && upsellModal) {
-      link.setAttribute("href", checkoutUrl || "#ofertas");
+      link.removeAttribute("href");
       link.removeAttribute("target");
       link.removeAttribute("rel");
-      link.addEventListener("click", handleCtaClick);
+      link.addEventListener("click", handleCtaClick, { capture: true });
       return;
     }
 
@@ -339,30 +343,22 @@ function setupUpsellModal() {
   });
 
   upsellDecline?.addEventListener("click", () => {
+    trackInitiateCheckout("essencial");
     trackMetaEvent("RecusouOfertaUpsell", {
       produto: "ABC com Jesus",
       oferta_recusada: CONFIG.precoUpsellCompleto
     });
     closeUpsellModal();
-
-    if (pendingEssencialCheckoutUrl) {
-      navigateToCheckout(pendingEssencialCheckoutUrl);
-      return;
-    }
-
-    smoothScrollToElement(offersSection);
   });
 
-  upsellAccept?.addEventListener("click", (event) => {
-    event.preventDefault();
+  upsellAccept?.addEventListener("click", () => {
+    trackInitiateCheckout("completo");
     trackMetaEvent("CliqueProdutoDesconto", {
       produto: "ABC com Jesus Completo",
       preco_promocional: CONFIG.precoUpsellCompleto,
       preco_original: CONFIG.precoOriginalCompleto
     });
-    const upsellUrl = getUpsellCheckoutUrl();
     closeUpsellModal();
-    navigateToCheckout(upsellUrl);
   });
 
   window.addEventListener("keydown", (event) => {
