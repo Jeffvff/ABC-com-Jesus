@@ -133,6 +133,16 @@ function navigateToCheckout(url) {
   window.location.href = url;
 }
 
+function navigateAfterTracking(url) {
+  if (!url) {
+    return;
+  }
+
+  window.setTimeout(() => {
+    navigateToCheckout(url);
+  }, 500);
+}
+
 function getScrollOffset() {
   const headerHeight = header?.offsetHeight ?? 0;
   return headerHeight + 18;
@@ -342,16 +352,21 @@ function setupUpsellModal() {
     element.addEventListener("click", closeUpsellModal);
   });
 
-  upsellDecline?.addEventListener("click", () => {
+  upsellDecline?.addEventListener("click", (event) => {
+    event.preventDefault();
+    const checkoutUrl = event.currentTarget.href;
     trackInitiateCheckout("essencial");
     trackMetaEvent("RecusouOfertaUpsell", {
       produto: "ABC com Jesus",
       oferta_recusada: CONFIG.precoUpsellCompleto
     });
     closeUpsellModal();
+    navigateAfterTracking(checkoutUrl);
   });
 
-  upsellAccept?.addEventListener("click", () => {
+  upsellAccept?.addEventListener("click", (event) => {
+    event.preventDefault();
+    const checkoutUrl = event.currentTarget.href;
     trackInitiateCheckout("completo");
     trackMetaEvent("CliqueProdutoDesconto", {
       produto: "ABC com Jesus Completo",
@@ -359,6 +374,7 @@ function setupUpsellModal() {
       preco_original: CONFIG.precoOriginalCompleto
     });
     closeUpsellModal();
+    navigateAfterTracking(checkoutUrl);
   });
 
   window.addEventListener("keydown", (event) => {
